@@ -61,6 +61,14 @@
 				android:layout_width="0px"
 				android:layout_height="0px"/>
 
+			<Button
+    android:id="@+id/btn_visitar_site"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Visitar Meu Launcher"
+    android:layout_gravity="center"
+    android:layout_marginTop="20dp" />
+			
 		</net.kdt.pojavlaunch.customcontrols.ControlLayout>
 
 		<com.kdt.LoggerView
