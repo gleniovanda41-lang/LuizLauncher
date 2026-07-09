@@ -1,4 +1,4 @@
-Name: LuizLauncher Build
+name: Android CI
 
 on:
   push:
@@ -19,14 +19,20 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Get LTW
+        run: |
+          mkdir -p app_pojavlauncher/libs
+          wget https://github.com/PojavLauncherTeam/LTW/releases/latest/download/ltw-release.aar -O app_pojavlauncher/libs/ltw-release.aar
+
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.11"
 
       - name: Build Debug .apk
         run: |
-          mkdir out
-          gradle :app_pojavlauncher:assembleDebug
+          mkdir -p out
+          # Compila o launcher
+          ./gradlew :app_pojavlauncher:assembleDebug
           mv app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/app-debug.apk
 
       - name: Upload APK
