@@ -39,6 +39,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
         Tools.checkStorageInteractive(this);
     }
+Button btnSite = findViewById(R.id.btn_visitar_site);
+btnSite.setOnClickListener(v -> {
+    // O seu link oficial do GitHub
+    String url = "https://github.com/gleniovanda41-lang/LuizLauncher"; 
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setData(Uri.parse(url));
+    startActivity(intent);
+});
 
     @Override
     protected void onPostResume() {
