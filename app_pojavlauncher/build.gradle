@@ -20,50 +20,51 @@ def getVersionName = {
     ByteArrayOutputStream TAG_PART_COMMIT = new ByteArrayOutputStream()
     String TAG_STRING
 
-    exec {
-        try {
+    try {
+        exec {
             commandLine 'git', 'describe', '--tags'
             ignoreExitValue true
             standardOutput = TAG
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+    } catch (Exception e) {
+        logger.warn('BUILD: Git command failed, using fallback version')
     }
 
-    if (TAG.toString() == "") {
-        exec {
-            // Fallback for action builds
-            try {
+    if (TAG.toString().trim() == "") {
+        try {
+            exec {
+                // Fallback for action builds
                 commandLine 'git', 'describe', '--always', '--tags'
                 ignoreExitValue true
                 standardOutput = TAG_PART_COMMIT
-            } catch (Exception e) {
             }
+        } catch (Exception e) {
+            logger.warn('BUILD: Git describe failed, using date-based version')
         }
     }
 
 
-    if(TAG.toString() != ""){
+    if(TAG.toString().trim() != ""){
         TAG_STRING = TAG.toString()
-    }else {
+    } else {
         if(TAG_PART_COMMIT.toString().trim() == ""){
              //Fallback no repo
             return ("LOCAL-" + "${getDate()}")
-        }else {
+        } else {
             // Used by github actions
             TAG_STRING =  'gladiolus-' + "${getDate()}" + "-" + TAG_PART_COMMIT.toString().trim()
         }
 
     }
 
-    exec {
-        try {
+    try {
+        exec {
             commandLine 'git', 'branch', '--show-current'
             ignoreExitValue true
             standardOutput = BRANCH
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+    } catch (Exception e) {
+        logger.warn('BUILD: Git branch command failed')
     }
 
     return TAG_STRING.trim().replace("-g", "-") + "-" + BRANCH.toString().trim()
